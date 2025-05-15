@@ -1,10 +1,6 @@
 #include "include/raylib.h"
 #include<stdio.h>
 
-const int screenWidth = 305;
-const int screenHeight = 305;
-const int rectSize = 95;
-
 enum Player {
     Cross = 0,
     Circle = 1
@@ -14,6 +10,13 @@ enum GameState {
     Running = 0,
     GameOver = 1
 };
+
+const int screenWidth = 305;
+const int screenHeight = 305;
+const int rectSize = 95;
+enum Player currentPlayer = Cross;
+enum GameState gameState = Running;
+
 
 struct Rectangle board[] = {
     { 5, 5, 95, 95 },
@@ -137,7 +140,7 @@ int ContainsAll(int arr[], int values[]) {
     return 1;
 }
 
-int IsGameOver(enum Player currentPlayer)
+int IsGameOver()
 {
     int winningCombinations[8][3] = 
     {
@@ -172,6 +175,52 @@ int IsGameOver(enum Player currentPlayer)
 }
 
 
+void GameStateRunning()
+{
+    if(IsMouseButtonReleased(0))
+    {
+        Vector2 mousePosition = GetMousePosition();
+        int index = GetSquareIndex(&mousePosition);
+
+        if(index > -1 && AssignNewMove(index, currentPlayer))
+        {
+            if(IsGameOver(currentPlayer)){
+                gameState = GameOver;
+            }
+            else if(currentPlayer == Cross){
+                currentPlayer = Circle;
+            }
+            else{
+                currentPlayer = Cross;
+            }
+        }
+    }
+
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+    DrawSquares();
+    DrawMoves();
+    EndDrawing();
+}
+
+void GameStateGameOver()
+{
+    char message[10] = "  wins!";
+    char winner = 'X';
+
+    if(currentPlayer != Cross)
+    {
+        winner = 'O';
+    }
+
+    message[0] = winner;
+
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+    DrawText(message, 100, 120, 40, RED);
+    EndDrawing();
+}
+
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
@@ -179,10 +228,9 @@ int main(void)
 {
     // Initialization
     //--------------------------------------------------------------------------------------
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "Tic Tac Toe");
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-    enum Player currentPlayer = Cross;
-    enum GameState gameState = Running;
+
     //--------------------------------------------------------------------------------------
 
     // Main game loop
@@ -191,49 +239,12 @@ int main(void)
 
         if(gameState == Running)
         {
-            
-            if(IsMouseButtonReleased(0))
-            {
-                Vector2 mousePosition = GetMousePosition();
-                int index = GetSquareIndex(&mousePosition);
-
-                if(index > -1 && AssignNewMove(index, currentPlayer))
-                {
-                    if(IsGameOver(currentPlayer)){
-                        gameState = GameOver;
-                    }
-                    else if(currentPlayer == Cross){
-                        currentPlayer = Circle;
-                    }
-                    else{
-                        currentPlayer = Cross;
-                    }
-                }
-            }
-
-            BeginDrawing();
-            ClearBackground(RAYWHITE);
-            DrawSquares();
-            DrawMoves();
-            EndDrawing();
+            GameStateRunning();
         }
 
         if(gameState == GameOver)
         {
-            char message[10] = "  wins!";
-            char winner = 'X';
-
-            if(currentPlayer != Cross)
-            {
-                winner = 'O';
-            }
-
-            message[0] = winner;
-
-            BeginDrawing();
-            ClearBackground(RAYWHITE);
-            DrawText(message, 100, 120, 40, RED);
-            EndDrawing();
+            GameStateGameOver();
         }
     }
 
