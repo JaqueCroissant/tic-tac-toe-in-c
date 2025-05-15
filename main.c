@@ -13,7 +13,9 @@ enum GameState {
 
 const int screenWidth = 305;
 const int screenHeight = 305;
-const int rectSize = 95;
+int xMoves[3] = {-1, -1, -1};
+int oMoves[3] = {-1, -1, -1};
+
 enum Player currentPlayer = Cross;
 enum GameState gameState = Running;
 
@@ -30,8 +32,7 @@ struct Rectangle board[] = {
     { 205, 205, 95, 95 },
 };
 
-int x_moves[3] = {-1, -1, -1};
-int o_moves[3] = {-1, -1, -1};
+
 
 void DrawSquares()
 {
@@ -44,9 +45,9 @@ int GetSquareIndex(Vector2 *position)
 {
     for(int i = 0; i < 9; i++){
         if( position->x > board[i].x && 
-            position->x < board[i].x + rectSize &&
+            position->x < board[i].x + board[i].width &&
             position->y > board[i].y && 
-            position->y < board[i].y + rectSize)
+            position->y < board[i].y + board[i].height)
             {
                 return i;
             }
@@ -58,7 +59,7 @@ int GetSquareIndex(Vector2 *position)
 int IsSquareAvailable(int index)
 {
     for(int i = 0; i < 3; i++){
-        if (x_moves[i] == index || o_moves[i] == index){
+        if (xMoves[i] == index || oMoves[i] == index){
             return 0;
         }
     }
@@ -75,11 +76,11 @@ int AssignNewMove(int index, enum Player player){
 
     if(player == Cross)
     {
-        moves = x_moves;
+        moves = xMoves;
     }
     else
     {
-        moves = o_moves;
+        moves = oMoves;
     }
 
     moves[2] = moves[1];
@@ -111,13 +112,13 @@ void DrawO(Rectangle cell, float thickness, Color color) {
 void DrawMoves(){
     for(int i = 0; i < 3; i++){
 
-        int x = x_moves[i];
+        int x = xMoves[i];
 
         if(x > -1){
             DrawX(board[x], 10, BLACK);            
         }
 
-        int o = o_moves[i];
+        int o = oMoves[i];
 
         if(o > -1){
             DrawO(board[o], 10, BLACK);            
@@ -157,10 +158,10 @@ int IsGameOver()
 
     if(currentPlayer == Cross)
     {
-        player_moves = x_moves;
+        player_moves = xMoves;
     }
     else{
-        player_moves = o_moves;
+        player_moves = oMoves;
     }
 
     for(int i = 0; i < 8; i++)
@@ -204,7 +205,7 @@ void GameStateRunning()
 
 void GameStateGameOver()
 {
-    char message[10] = "  wins!";
+    char message[8] = "  wins!\0";
     char winner = 'X';
 
     if(currentPlayer != Cross)
