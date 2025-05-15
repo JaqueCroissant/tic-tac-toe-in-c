@@ -75,17 +75,12 @@ int AssignNewMove(int index, enum Player player){
         return 0;
     }
 
-    puts("square is available");
-
-    printf("player is %d\n", player);
     if(player == Cross){
 
-        puts("Adding X move");
         AddMoveToArray(index, x_moves);
     }
     else
     {
-        puts("Adding O move");
         AddMoveToArray(index, o_moves);
     }
 
@@ -201,7 +196,7 @@ int main(void)
             {
                 Vector2 mousePosition = GetMousePosition();
                 int index = GetSquareIndex(&mousePosition);
-                puts("mouse released");
+
                 if(index > -1 && AssignNewMove(index, currentPlayer))
                 {
                     if(IsGameOver(currentPlayer)){
