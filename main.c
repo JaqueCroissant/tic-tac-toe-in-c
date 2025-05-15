@@ -1,12 +1,14 @@
 #include "include/raylib.h"
 #include<stdio.h>
 
-enum Player {
+enum Player 
+{
     Cross = 0,
     Circle = 1
 };
 
-enum GameState {
+enum GameState 
+{
     Running = 0,
     GameOver = 1
 };
@@ -20,7 +22,8 @@ enum Player currentPlayer = Cross;
 enum GameState gameState = Running;
 
 
-struct Rectangle board[] = {
+struct Rectangle board[] = 
+{
     { 5, 5, 95, 95 },
     { 105, 5, 95, 95 },
     { 205, 5, 95, 95 },
@@ -36,14 +39,16 @@ struct Rectangle board[] = {
 
 void DrawSquares()
 {
-    for(int i = 0; i < 9; i++){
+    for(int i = 0; i < 9; i++)
+    {
         DrawRectangleRec(board[i], LIGHTGRAY);
     }
 }
 
 int GetSquareIndex(Vector2 *position)
 {
-    for(int i = 0; i < 9; i++){
+    for(int i = 0; i < 9; i++)
+    {
         if( position->x > board[i].x && 
             position->x < board[i].x + board[i].width &&
             position->y > board[i].y && 
@@ -58,8 +63,10 @@ int GetSquareIndex(Vector2 *position)
 
 int IsSquareAvailable(int index)
 {
-    for(int i = 0; i < 3; i++){
-        if (xMoves[i] == index || oMoves[i] == index){
+    for(int i = 0; i < 3; i++)
+    {
+        if (xMoves[i] == index || oMoves[i] == index)
+        {
             return 0;
         }
     }
@@ -67,8 +74,10 @@ int IsSquareAvailable(int index)
     return 1;
 }
 
-int AssignNewMove(int index, enum Player player){
-    if(!IsSquareAvailable(index)){
+int AssignNewMove(int index, enum Player player)
+{
+    if(!IsSquareAvailable(index))
+    {
         return 0;
     }
 
@@ -90,47 +99,56 @@ int AssignNewMove(int index, enum Player player){
     return 1;
 }
 
-void DrawX(Rectangle cell, float thickness, Color color) {
-    Vector2 topLeft     = { cell.x + thickness, cell.y + thickness };
-    Vector2 topRight    = { cell.x + cell.width - thickness, cell.y + thickness };
-    Vector2 bottomLeft  = { cell.x + thickness, cell.y + cell.height - thickness };
-    Vector2 bottomRight = { cell.x + cell.width - thickness, cell.y + cell.height - thickness };
+void DrawX(Rectangle rectangle, float thickness, Color color) 
+{
+    Vector2 topLeft     = { rectangle.x + thickness, rectangle.y + thickness };
+    Vector2 topRight    = { rectangle.x + rectangle.width - thickness, rectangle.y + thickness };
+    Vector2 bottomLeft  = { rectangle.x + thickness, rectangle.y + rectangle.height - thickness };
+    Vector2 bottomRight = { rectangle.x + rectangle.width - thickness, rectangle.y + rectangle.height - thickness };
 
     DrawLineEx(topLeft, bottomRight, thickness, color);
     DrawLineEx(topRight, bottomLeft, thickness, color);
 }
 
-void DrawO(Rectangle cell, float thickness, Color color) {
-    float centerX = cell.x + cell.width / 2;
-    float centerY = cell.y + cell.height / 2;
-    float radius = (cell.width < cell.height ? cell.width : cell.height) / 2 - thickness;
+void DrawO(Rectangle rectangle, float thickness, Color color) 
+{
+    float centerX = rectangle.x + rectangle.width / 2;
+    float centerY = rectangle.y + rectangle.height / 2;
+    float radius = (rectangle.width < rectangle.height ? rectangle.width : rectangle.height) / 2 - thickness;
 
     DrawCircle(centerX, centerY, radius, color);
     DrawCircle(centerX, centerY, radius - thickness, LIGHTGRAY);
 }
 
-void DrawMoves(){
-    for(int i = 0; i < 3; i++){
-
+void DrawMoves()
+{
+    for(int i = 0; i < 3; i++)
+    {
         int x = xMoves[i];
 
-        if(x > -1){
+        if(x > -1)
+        {
             DrawX(board[x], 10, BLACK);            
         }
 
         int o = oMoves[i];
 
-        if(o > -1){
+        if(o > -1)
+        {
             DrawO(board[o], 10, BLACK);            
         }
     }
 }
 
-int ContainsAll(int arr[], int values[]) {
-    for (int i = 0; i < 3; i++) {
+int ContainsAll(int arr[], int values[]) 
+{
+    for (int i = 0; i < 3; i++) 
+    {
         int found = 0;
-        for (int j = 0; j < 3; j++) {
-            if (arr[j] == values[i]) {
+        for (int j = 0; j < 3; j++) 
+        {
+            if (arr[j] == values[i]) 
+            {
                 found = 1;
                 break;
             }
@@ -166,7 +184,8 @@ int IsGameOver()
 
     for(int i = 0; i < 8; i++)
     {
-        if(ContainsAll(player_moves, winningCombinations[i])){
+        if(ContainsAll(player_moves, winningCombinations[i]))
+        {
             return 1; 
         }
     }
@@ -184,13 +203,16 @@ void GameStateRunning()
 
         if(index > -1 && AssignNewMove(index, currentPlayer))
         {
-            if(IsGameOver(currentPlayer)){
+            if(IsGameOver(currentPlayer))
+            {
                 gameState = GameOver;
             }
-            else if(currentPlayer == Cross){
+            else if(currentPlayer == Cross)
+            {
                 currentPlayer = Circle;
             }
-            else{
+            else
+            {
                 currentPlayer = Cross;
             }
         }
