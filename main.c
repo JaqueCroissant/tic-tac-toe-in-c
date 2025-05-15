@@ -17,10 +17,8 @@ const int screenWidth = 305;
 const int screenHeight = 305;
 int xMoves[3] = {-1, -1, -1};
 int oMoves[3] = {-1, -1, -1};
-
 enum Player currentPlayer = Cross;
 enum GameState gameState = Running;
-
 
 struct Rectangle board[] = 
 {
@@ -34,8 +32,6 @@ struct Rectangle board[] =
     { 105, 205, 95, 95 },
     { 205, 205, 95, 95 },
 };
-
-
 
 void DrawSquares()
 {
@@ -242,7 +238,6 @@ void GameStateGameOver()
     DrawText(message, 100, 120, 40, RED);
     EndDrawing();
 }
-
 
 int main(void)
 {
