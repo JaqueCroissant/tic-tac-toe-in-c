@@ -66,26 +66,25 @@ int IsSquareAvailable(int index)
     return 1;
 }
 
-void AddMoveToArray(int move, int *array)
-{
-    array[2] = array[1];
-    array[1] = array[0];
-    array[0] = move;
-}
-
 int AssignNewMove(int index, enum Player player){
     if(!IsSquareAvailable(index)){
         return 0;
     }
 
-    if(player == Cross){
+    int *moves;
 
-        AddMoveToArray(index, x_moves);
+    if(player == Cross)
+    {
+        moves = x_moves;
     }
     else
     {
-        AddMoveToArray(index, o_moves);
+        moves = o_moves;
     }
+
+    moves[2] = moves[1];
+    moves[1] = moves[0];
+    moves[0] = index;
 
     return 1;
 }
@@ -221,22 +220,14 @@ void GameStateGameOver()
     EndDrawing();
 }
 
-//------------------------------------------------------------------------------------
-// Program main entry point
-//------------------------------------------------------------------------------------
+
 int main(void)
 {
-    // Initialization
-    //--------------------------------------------------------------------------------------
     InitWindow(screenWidth, screenHeight, "Tic Tac Toe");
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    SetTargetFPS(60);
 
-    //--------------------------------------------------------------------------------------
-
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    while (!WindowShouldClose())
     {
-
         if(gameState == Running)
         {
             GameStateRunning();
